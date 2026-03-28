@@ -140,7 +140,7 @@ public class CThu extends CNguoi{
 		//lay mua giai tru cho nam sinh => tuoi, phai loc lay clb nua
 		//khong phai! thong ke theo mua giai va clb => chi can so sanh clb-mua(nam), con tre trung gia tao bien de ghi nho la dc
 		for(int i = 0; i< n; i++) {
-			if(ds[i] instanceof CThu) {
+			if(!daTinh[i] && ds[i] instanceof CThu) {
 				CThu a = (CThu) ds[i]; 
 				
 				String clbVaMuaI = a.clb + " - " + a.mua;
@@ -171,13 +171,13 @@ public class CThu extends CNguoi{
 							daTinh[j] = true;
 							
 							try {
-								String[] ntnJ = a.getN().split("[-/]");
-								int tuoiJ = Integer.parseInt(a.mua) - Integer.parseInt(ntnJ[2]);
+								String[] ntnJ = b.getN().split("[-/]");
+								int tuoiJ = Integer.parseInt(b.mua) - Integer.parseInt(ntnJ[2]);
 								
-								if(tuoiJ >= 18 && tuoiJ <= 24) tre += a.bthang;
-								else if(tuoiJ >=25 && tuoiJ <=28) trung += a.bthang;
-								else if(tuoiJ >28) gia += a.bthang;
-								tongBT += a.bthang;
+								if(tuoiJ >= 18 && tuoiJ <= 24) tre += b.bthang;
+								else if(tuoiJ >=25 && tuoiJ <=28) trung += b.bthang;
+								else if(tuoiJ >28) gia += b.bthang;
+								tongBT += b.bthang;
 							}catch (Exception e) {}
 						}
 					}
@@ -189,6 +189,55 @@ public class CThu extends CNguoi{
 		        System.out.println(" -> TONG CONG         : " + tongBT + " ban\n");
 			}
 		}
+		
+		//TIM TONG BAN THANG CUA TUNG CLB VA TIEN LUONG CAO NHAT CUA CAU THU
+		System.out.println("TONG BAN THANG CUA CAC CLB VA TIEN LUONG CAO NHAT TRONG CLB DO: \n");
+		boolean[] daLuu = new boolean[n];
+		for(int i = 0; i < n ; i++) {
+			if(!daLuu[i]) {
+				daLuu[i] = true;
+				
+				if(ds[i] instanceof CThu) {
+					CThu a = (CThu) ds[i];
+					
+					String club = a.clb;
+					double luong = a.luongThue();
+					
+					double maxLuong = luong;
+					int max = i;
+					long maxBT = a.bthang;
+					
+					for(int j = i+1;j<n;j++) {
+						if(!daLuu[j]) {
+							if(ds[j] instanceof CThu) {
+								
+								
+								CThu b = (CThu) ds[j];
+								
+								String clubJ= b.clb;
+								double luongJ =b.luongThue();
+								
+								if(clubJ.equalsIgnoreCase(club)) {
+									daLuu[j] = true;
+									maxBT += b.bthang;
+									
+									if(luongJ > maxLuong) {	maxLuong = luongJ; max = j;}
+								
+								
+							}
+						}
+					}
+					System.out.println(club + " co tong ban thang la: " + maxBT);
+					System.out.println("Cau thu " + max + " co luong cao nhat clb: " + maxLuong);
+				}
+				
+			}
+			
+			
+		}
+		
+		
 	}
 
+	}
 }
